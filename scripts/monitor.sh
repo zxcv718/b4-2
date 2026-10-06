@@ -12,10 +12,13 @@ while :; do
     # ps %cpu는 생애 평균이라 스파이크가 묻힘 → top 2회 샘플 중 두 번째(1초 구간) 사용
     cpu=$(top -b -n 2 -d 1 -p "$pid" | awk -v p="$pid" '$1==p{c=$9} END{print c+0}')
     read -r mem rss nlwp stat < <(ps -o %mem=,rss=,nlwp=,stat= -p "$pid")
+  fi
+  if [ -n "$pid" ] && [ -n "${rss:-}" ]; then
     line="PID:$pid CPU:${cpu}% MEM:${mem}% RSS:$((rss/1024))MB THREADS:$nlwp STAT:$stat"
-  else
+  else   # 없음, 또는 pgrep 직후 종료돼 ps가 빈 값을 준 경우
     line="PID:- STATUS:NOT_RUNNING"
   fi
+  rss=""
   if [ -n "$APP_LOG" ]; then
     load=$(grep -o 'Current Load: [0-9.]*%' "$APP_LOG" 2>/dev/null | tail -1 | cut -d' ' -f3)
     line="$line APP_LOAD:${load:--}"
