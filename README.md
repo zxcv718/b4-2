@@ -12,7 +12,6 @@
 | 보너스 | [issues/04-bonus-scheduling.md](issues/04-bonus-scheduling.md) | 스케줄링 추론 | - | Round-Robin, 퀀텀 ≈ 2단계(약 110ms), 4회 재현 |
 | 템플릿 | [issues/TEMPLATE.md](issues/TEMPLATE.md) | 이슈 리포트 마크다운 템플릿 | | |
 
-평가 대비 Q&A: [docs/qna.md](docs/qna.md)
 
 ## 평가항목 1 체크리스트 매핑
 
@@ -45,7 +44,7 @@
 docker build -t b4-2 .
 docker run -d --init --name b4 -v "$PWD":/work -p 15034:15034 b4-2 sleep infinity
 
-# 케이스 실행: env.txt / app.log / monitor.log / run.txt(종료코드·생존시간) / agent_logs 가 evidence/<CASE>/<TAG>/ 에 저장된다
+# 케이스 실행: env.txt / app.log / monitor.log / run.txt(종료코드·생존시간) 가 evidence/<CASE>/<TAG>/ 에 저장된다
 docker exec b4 bash -c 'CASE=oom      TAG=before MEMORY_LIMIT=256 MON_INTERVAL=2 scripts/run.sh'
 docker exec b4 bash -c 'CASE=cpu      TAG=before CPU_MAX_OCCUPY=80 MEMORY_LIMIT=512 MON_INTERVAL=2 scripts/run.sh'
 docker exec b4 bash -c 'CASE=deadlock TAG=before MULTI_THREAD_ENABLE=true MEMORY_LIMIT=512 scripts/run.sh'   # Hang: 다른 터미널에서 probe 후 kill
@@ -58,14 +57,13 @@ docker exec b4 scripts/probe_hang.sh evidence/deadlock/before/probe.txt
 
 ## 스크립트
 
-| 파일 | 역할 | 자가 점검 |
-|---|---|---|
-| [scripts/monitor.sh](scripts/monitor.sh) | 관제: PID / CPU(`top` 1초 구간) / MEM% / RSS / THREADS / STAT / DISK / FIREWALL (+ 앱이 보고한 Load) | `scripts/test_monitor.sh` (컨테이너) |
-| [scripts/run.sh](scripts/run.sh) | 케이스 실행 + 관제 + 종료 코드·생존 시간 기록 | `scripts/test_run.sh` (컨테이너) |
-| [scripts/probe_hang.sh](scripts/probe_hang.sh) | "살아있지만 멈춘" 프로세스 진단 | - |
-| [scripts/cgroup_cpu.sh](scripts/cgroup_cpu.sh) | 컨테이너 전체 CPU 사용률(cgroup v2 `cpu.stat`) | - |
-| [scripts/sched_segments.sh](scripts/sched_segments.sh) | 스레드 로그 → 실행 구간 분석 (보너스) | `scripts/test_sched.sh` |
-| [scripts/test_evidence.sh](scripts/test_evidence.sh) | 케이스별 필수 증거가 원본 로그에 있는지 점검 | 자체 |
+| 파일 | 역할 |
+|---|---|
+| [scripts/monitor.sh](scripts/monitor.sh) | 관제: PID / CPU(`top` 1초 구간) / MEM% / RSS / THREADS / STAT / DISK / FIREWALL (+ 앱이 보고한 Load) |
+| [scripts/run.sh](scripts/run.sh) | 케이스 실행 + 관제 + 종료 코드·생존 시간 기록 |
+| [scripts/probe_hang.sh](scripts/probe_hang.sh) | "살아있지만 멈춘" 프로세스 진단 |
+| [scripts/cgroup_cpu.sh](scripts/cgroup_cpu.sh) | 컨테이너 전체 CPU 사용률(cgroup v2 `cpu.stat`) |
+| [scripts/sched_segments.sh](scripts/sched_segments.sh) | 스레드 로그 → 실행 구간 분석 (보너스) |
 
 ## 분석 중 확인한 사실 (미션 예시와 다른 점)
 

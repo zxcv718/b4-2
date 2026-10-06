@@ -61,7 +61,7 @@ END 2026-10-06 20:14:23 EXIT:137 SURVIVED:33s        ← run.txt
 
 - 로그 속 `Self-terminating process 930`의 PID가 관제 대상 PID 930과 같다. 관제한 프로세스가 바로 자가 종료된 프로세스라는 뜻이다.
 - 이 빌드는 미션 예시에 나온 `>>> [SYSTEM] SELF-TERMINATED <<<` 배너를 출력하지 않는다. 대신 `[CRITICAL] [MemoryGuard]` 두 줄과 종료 코드 137이 같은 사실을 보여 준다.
-- 같은 로그가 `$AGENT_LOG_DIR/agent_app.log`에도 기록돼 있다 ([agent_logs](../evidence/oom/before/agent_logs)).
+- 같은 로그가 `$AGENT_LOG_DIR/agent_app.log`에도 기록된다. 내용이 app.log와 같아 따로 보관하지 않았다.
 
 ### 2-3. 시스템 도구 출력 (종료 11초 전, [ps.txt](../evidence/oom/before/ps.txt))
 

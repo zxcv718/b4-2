@@ -3,7 +3,7 @@
 set -u
 : "${CASE:?CASE 필요}" "${TAG:?TAG 필요}"
 source "$(dirname "$0")/agent.env"
-out="evidence/$CASE/$TAG"; mkdir -p "$out"; rm -rf "$out/monitor.log" "$out/agent_logs"
+out="evidence/$CASE/$TAG"; mkdir -p "$out"; rm -f "$out/monitor.log"
 rm -f "$AGENT_LOG_DIR"/*   # 앱 로그 파일을 실행 단위로 분리
 env | grep -E '^(AGENT_[A-Z_]*|MEMORY_LIMIT|CPU_MAX_OCCUPY|MULTI_THREAD_ENABLE)=' | sort > "$out/env.txt"
 scripts/monitor.sh agent-leak-app "${MON_INTERVAL:-5}" "$out/monitor.log" "$out/app.log" > /dev/null & mon=$!
@@ -12,5 +12,4 @@ start=$(date +%s); echo "START $(date '+%F %T')" | tee "$out/run.txt"
 ./agent-leak-app-arm64 2>&1 | tee "$out/app.log"
 rc=${PIPESTATUS[0]}; end=$(date +%s)
 echo "END $(date '+%F %T') EXIT:$rc SURVIVED:$((end-start))s" | tee -a "$out/run.txt"
-cp -r "$AGENT_LOG_DIR" "$out/agent_logs"
 sleep $(( ${MON_INTERVAL:-5} + 2 ))   # 종료 후 NOT_RUNNING 한 줄을 남긴다 (관제 1주기 = 간격 + top 1초)
