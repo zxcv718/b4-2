@@ -18,7 +18,7 @@
 
 ## 2. Evidence & Logs (증거 자료)
 
-진단은 아래 순서로 했다. 각 단계의 결과가 다음 단계에서 무엇을 확인할지를 정했다 ([`scripts/probe_hang.sh`](../scripts/probe_hang.sh)).
+진단은 아래 순서로 했다. 각 단계의 결과가 다음 단계에서 무엇을 확인할지를 정했다 ([`scripts/probe_hang.sh`](../scripts/probe_hang.sh)). 증거를 모은 뒤 스크립트에 "대상 없음" 처리를 넣고 1단계 grep 패턴을 좁혔다. 그래서 `probe.txt` 1단계에는 함께 띄운 관제 스크립트 줄이 찍혀 있고, `probe2.txt`의 `### 6)` 종료 기록은 수동 명령으로 덧붙인 것이다.
 
 ### 2-1. ① 살아있는가: `ps -ef | grep` ([probe.txt](../evidence/deadlock/before/probe.txt), 로그가 멈춘 지 95초 뒤)
 
