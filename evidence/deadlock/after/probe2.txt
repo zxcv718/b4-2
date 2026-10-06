@@ -1,0 +1,38 @@
+### 0) 시각: 2026-10-06 20:36:35  대상 PID: 2209
+
+### 1) 살아있는가 — ps -ef | grep
+agent       2194    2178  0 20:33 ?        00:00:00 ./agent-leak-app-arm64
+agent       2209    2194  1 20:33 ?        00:00:03 ./agent-leak-app-arm64
+
+### 2) 스레드별 상태·대기 지점 — ps -L (STAT, WCHAN)
+    PID     LWP STAT %CPU %MEM   RSS WCHAN                    TIME COMMAND
+   2209    2209 SNl   0.0  0.7 63996 futex_wait           00:00:00 agent-leak-app-
+   2209    2210 SNl   0.5  0.7 63996 do_select            00:00:01 agent-leak-app-
+   2209    2211 SNl   0.9  0.7 63996 do_select            00:00:01 agent-leak-app-
+
+### 3) 스레드별 CPU 변화 — top -H (2초 간격 3회, TIME+ 정체 확인)
+top - 20:36:35 up 32 min,  0 user,  load average: 0.00, 0.02, 0.00
+   2209 agent     30  10  170900  63996   4200 S   0.0   0.8   0:00.05 agent-l+
+   2210 agent     30  10  170900  63996   4200 S   0.0   0.8   0:01.05 agent-l+
+   2211 agent     30  10  170900  63996   4200 S   0.0   0.8   0:01.88 agent-l+
+top - 20:36:37 up 32 min,  0 user,  load average: 0.00, 0.02, 0.00
+   2210 agent     30  10  170900  63996   4200 S   0.5   0.8   0:01.06 agent-l+
+   2211 agent     30  10  170900  63996   4200 S   0.5   0.8   0:01.89 agent-l+
+   2209 agent     30  10  170900  63996   4200 S   0.0   0.8   0:00.05 agent-l+
+top - 20:36:39 up 32 min,  0 user,  load average: 0.00, 0.02, 0.00
+   2211 agent     30  10  170900  63996   4200 S   0.5   0.8   0:01.90 agent-l+
+   2209 agent     30  10  170900  63996   4200 S   0.0   0.8   0:00.05 agent-l+
+   2210 agent     30  10  170900  63996   4200 S   0.0   0.8   0:01.06 agent-l+
+
+### 4) 커널 대기 지점 — /proc/2209/task/*/{wchan,stat}
+2209 state=S wchan=futex_wait utime=4 stime=1
+2210 state=S wchan=do_select utime=20 stime=86
+2211 state=S wchan=do_select utime=188 stime=2
+
+### 5) 로그 진행 여부 — 마지막 기록 시각 vs 현재
+now : 2026-10-06 20:36:40
+mtime: 2026-10-06 20:36:39.974464417 +0000
+age : 1s
+2026-10-06 20:36:36,844 [INFO] [CpuWorker] Current Load: 12.09%
+2026-10-06 20:36:37,166 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-10-06 20:36:39,974 [INFO] [CpuWorker] Current Load: 6.11%
