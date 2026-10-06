@@ -1,0 +1,9 @@
+2026-10-06 20:15:05
+    PID    PPID USER     STAT  NI %CPU %MEM   RSS    VSZ     ELAPSED CMD
+   1108    1092 agent    S      0  0.1  0.0  1836   2800       00:30 ./agent-leak-app-arm64
+   1119    1108 agent    SNl   10  1.4  3.0 247672 401336      00:30 ./agent-leak-app-arm64
+
+VmSize:	  401336 kB
+VmHWM:	  247672 kB
+VmRSS:	  247672 kB
+Threads:	3
