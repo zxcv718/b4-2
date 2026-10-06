@@ -1,0 +1,18 @@
+top - 20:25:36 up 21 min,  0 user,  load average: 0.08, 0.11, 0.03
+Tasks:  16 total,   1 running,  15 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.3 sy,  0.1 ni, 99.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   8004.5 total,   7125.9 free,    805.1 used,    267.0 buff/cache     
+MiB Swap:   9028.5 total,   9028.5 free,      0.0 used.   7199.4 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    343 agent     30  10  554960 399248   6564 S   3.0   4.9   0:00.76 agent-l+
+      1 agent     20   0     872    316    260 S   0.0   0.0   0:00.01 docker-+
+      6 agent     20   0    2280   1228   1140 S   0.0   0.0   0:00.00 sleep
+    302 agent     20   0    4044   3060   2784 S   0.0   0.0   0:00.00 bash
+    307 agent     20   0    4044   3104   2784 S   0.0   0.0   0:00.00 bash
+
+### top -H -p 343 (스레드별)
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    356 agent     30  10  554960 399268   6584 S   5.0   4.9   0:00.50 agent-l+
+    343 agent     30  10  554960 399268   6584 S   0.0   4.9   0:00.05 agent-l+
+    355 agent     30  10  554960 399268   6584 S   0.0   4.9   0:00.24 agent-l+

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# usage: monitor.sh <name-pattern> [interval_sec] [logfile]
+# usage: monitor.sh <name-pattern> [interval_sec] [logfile] [app_log]
+#   app_log: 주어지면 앱이 스스로 보고한 마지막 "Current Load"를 APP_LOAD로 함께 기록 (OS 측정값과 비교용)
 set -u
-PAT="${1:-agent-leak-app}"; INTERVAL="${2:-5}"; LOG="${3:-monitor.log}"
+PAT="${1:-agent-leak-app}"; INTERVAL="${2:-5}"; LOG="${3:-monitor.log}"; APP_LOG="${4:-}"
 while :; do
   ts=$(date '+%Y-%m-%d %H:%M:%S')
   pid=$(pgrep -n "$PAT")   # comm 기준(-f 아님: 자기 자신 매칭 방지), -n: 가장 최근 = PyInstaller 자식
@@ -14,6 +15,10 @@ while :; do
     line="PID:$pid CPU:${cpu}% MEM:${mem}% RSS:$((rss/1024))MB THREADS:$nlwp STAT:$stat"
   else
     line="PID:- STATUS:NOT_RUNNING"
+  fi
+  if [ -n "$APP_LOG" ]; then
+    load=$(grep -o 'Current Load: [0-9.]*%' "$APP_LOG" 2>/dev/null | tail -1 | cut -d' ' -f3)
+    line="$line APP_LOAD:${load:--}"
   fi
   echo "[$ts] PROCESS:$PAT $line DISK:$disk FIREWALL:$fw" | tee -a "$LOG"
   sleep "$INTERVAL"
