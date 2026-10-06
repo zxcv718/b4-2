@@ -1,0 +1,44 @@
+=== evidence/recon/app-3-mem512-cpu50.log
+#1 Thread-A start=20:06:46,906 span=112ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#2 Thread-B start=20:06:47,072 span=107ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#3 Thread-C start=20:06:47,234 span=109ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#4 Thread-A start=20:06:47,397 span=111ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#5 Thread-B start=20:06:47,564 span=112ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#6 Thread-C start=20:06:47,730 span=106ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#7 Thread-A start=20:06:47,892 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#8 Thread-B start=20:06:47,946 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#9 Thread-C start=20:06:48,002 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+segments=9 switches=8 avg_slice=137.0ms (구간 시작 간격 평균)
+=== evidence/oom/after/app.log
+#1 Thread-A start=20:14:37,885 span=108ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#2 Thread-B start=20:14:38,047 span=107ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#3 Thread-C start=20:14:38,208 span=109ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#4 Thread-A start=20:14:38,368 span=107ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#5 Thread-B start=20:14:38,527 span=106ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#6 Thread-C start=20:14:38,687 span=109ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#7 Thread-A start=20:14:38,849 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#8 Thread-B start=20:14:38,905 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#9 Thread-C start=20:14:38,967 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+segments=9 switches=8 avg_slice=135.2ms (구간 시작 간격 평균)
+=== evidence/cpu/after/app.log
+#1 Thread-A start=20:24:51,980 span=116ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#2 Thread-B start=20:24:52,149 span=110ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#3 Thread-C start=20:24:52,310 span=105ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#4 Thread-A start=20:24:52,469 span=111ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#5 Thread-B start=20:24:52,632 span=109ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#6 Thread-C start=20:24:52,797 span=108ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#7 Thread-A start=20:24:52,958 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#8 Thread-B start=20:24:53,010 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#9 Thread-C start=20:24:53,062 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+segments=9 switches=8 avg_slice=135.2ms (구간 시작 간격 평균)
+=== evidence/deadlock/after/app.log
+#1 Thread-A start=20:33:18,742 span=112ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#2 Thread-B start=20:33:18,910 span=115ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#3 Thread-C start=20:33:19,077 span=106ms lines=3 progress=20%→40% last="Preempted. Progress saved at (40%)"
+#4 Thread-A start=20:33:19,236 span=110ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#5 Thread-B start=20:33:19,401 span=111ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#6 Thread-C start=20:33:19,565 span=110ms lines=3 progress=60%→80% last="Preempted. Progress saved at (80%)"
+#7 Thread-A start=20:33:19,731 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#8 Thread-B start=20:33:19,787 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+#9 Thread-C start=20:33:19,843 span=0ms lines=1 progress=100%→100% last="Resumed. Calculating... (100%)"
+segments=9 switches=8 avg_slice=137.6ms (구간 시작 간격 평균)
