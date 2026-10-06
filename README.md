@@ -39,6 +39,8 @@
 
 ## 재현 방법
 
+바이너리(`agent-leak-app-arm64`, Intel은 x86 판)는 미션 첨부 zip에서 받아 저장소 루트에 둔다(`.gitignore` 처리됨). 스크립트는 저장소 루트에서 실행한다.
+
 ```bash
 docker build -t b4-2 .
 docker run -d --init --name b4 -v "$PWD":/work -p 15034:15034 b4-2 sleep infinity
@@ -67,7 +69,7 @@ docker exec b4 scripts/probe_hang.sh evidence/deadlock/before/probe.txt
 
 ## 분석 중 확인한 사실 (미션 예시와 다른 점)
 
-- **시나리오는 환경변수 조합으로 결정된다**: `MEMORY_LIMIT ≤ 256`이면 Memory Leak, `CPU_MAX_OCCUPY > 50`이면 CPU Spike, `MULTI_THREAD_ENABLE=true`이면 Deadlock, 모두 정상이면 Healthy(RR 스케줄러 + 자가 회복)가 선택된다 ([evidence/recon/notes.md](evidence/recon/notes.md)).
+- **시나리오는 환경변수 조합으로 결정된다**: `MEMORY_LIMIT ≤ 256`이면 Memory Leak, `CPU_MAX_OCCUPY > 50`이면 CPU Spike, `MULTI_THREAD_ENABLE=true`이면 Deadlock, 모두 정상이면 Healthy(RR 스케줄러 + 자가 회복)가 선택된다 ([evidence/recon/notes.md](evidence/recon/notes.md)). 시험한 값은 MEMORY 256/512, CPU 50/80, MT true/false이고, 경계값은 배너의 권고 문구(`Recommend Over 256MB`, `Recommend Under 50%`) 기준 추정이다. OOM·CPU의 After 설정이 Healthy 시나리오를 고르는 것도 이 때문이다.
 - 미션 예시의 `SELF-TERMINATED`, `WATCHDOG ... SIGTERM` 배너는 이 빌드에서 출력되지 않는다. 같은 사실을 `[CRITICAL] [MemoryGuard]` / `[CRITICAL] CPU Threshold Violated!` 로그와 종료 코드 137(SIGKILL) / 143(SIGTERM)로 입증했다.
 - CpuWorker의 `Current Load`는 앱이 스스로 계산해 보고하는 지표이고, OS가 측정한 실제 CPU 사용률은 0~5%였다(1코어 재검증 포함). 그래서 관제는 두 값을 함께 기록한다 ([02-cpu §2-3](issues/02-cpu-spike.md#2-3-시스템-도구-출력-시스템-전체-부하가-아니다-toptxt-pstxt-cgrouptxt)).
 - 파일로 리다이렉트할 때 Python 출력이 버퍼링돼 SIGKILL 직전 로그가 사라질 수 있다. 그래서 `PYTHONUNBUFFERED=1`을 설정했다.

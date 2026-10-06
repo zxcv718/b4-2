@@ -17,7 +17,7 @@ PyInstaller onefile: 부모(부트로더, RSS ~1.7MB) → 자식(실제 Python, 
 | app-3-mem512-cpu50 | 512 | 50 | false | Healthy (RR 스케줄러 + 자가 회복) | 생존 (수동 종료) |
 | app-4-oom | 256 | 50 | false | Memory Leak | EXIT 137(SIGKILL), 33s |
 | app-5-cpu | 512 | 80 | false | CPU Spike | EXIT 143(SIGTERM), 30s, 56.8%에서 위반 |
-| app-6-deadlock | 512 | 50 | true | Deadlock | 2초 만에 BLOCKED, PID 유지, 3스레드 futex_wait |
+| app-6-deadlock | 512 | 50 | true | Deadlock | 시작 약 9초 뒤(워커 시작 2초 뒤) BLOCKED, PID 유지, 3스레드 futex_wait |
 
 - 배너 경고가 판단 기준을 드러낸다: `MEMORY Recommend Over 256MB`, `CPU Recommend Under 50%`, `THREAD Concurrency True WARNING`.
 - MEMORY_LIMIT ≤ 256이면 CPU 값과 무관하게 Memory 시나리오가 우선(run 1).

@@ -14,7 +14,7 @@
 
 - 언제: 20:29:34.014 `WAITING ... (Status: BLOCKED)` 두 줄을 끝으로 로그 출력이 멈췄다. 관찰을 끝낸 20:32:43까지 **189초 동안 로그가 한 줄도 늘지 않았다.**
 - 어떤 조건에서: 배너가 `[ THREAD ] Concurrency: True [ WARNING ]`, `>>> SYSTEM WARNING: POTENTIAL DEADLOCK IN CONCURRENT MODE.`로 경고했다. 메모리(512MB)와 CPU(50%)는 정상값이다.
-- 재현성: 같은 설정으로 2회 실행(정찰 1회, 본 측정 1회)했고 두 번 모두 시작 약 7~10초 뒤 같은 지점에서 멈췄다.
+- 재현성: 같은 설정으로 2회 실행(정찰 1회, 본 측정 1회)했고 두 번 모두 시작 약 9~10초 뒤(워커 시작 약 2초 뒤) 같은 지점에서 멈췄다.
 
 ## 2. Evidence & Logs (증거 자료)
 
@@ -29,7 +29,7 @@ agent       1475    1464  0 20:29 ?        00:00:00 ./agent-leak-app-arm64
 ```
 → PID 1475가 존재한다. 크래시가 아니다. 그런데 누적 CPU 시간이 `00:00:00`이므로 "일하고 있는지"를 다음 단계에서 확인했다.
 
-### 2-2. ② CPU/메모리 정체: `monitor.sh` ([monitor.log](../evidence/deadlock/before/monitor.log), 5초 간격 32회)
+### 2-2. ② CPU/메모리 정체: `monitor.sh` ([monitor.log](../evidence/deadlock/before/monitor.log), 약 6초 간격 32회 — 관제 1주기 = 5초 + `top` 1초)
 
 ```
 [2026-10-06 20:29:31] PROCESS:agent-leak-app PID:1475 CPU:1% MEM:0.2% RSS:16MB THREADS:3 STAT:SNl ...   ← 워커 시작
@@ -162,7 +162,7 @@ CASE=deadlock TAG=after MULTI_THREAD_ENABLE=false MEMORY_LIMIT=512 CPU_MAX_OCCUP
 | PID 존재 | 존재 (1475) | 존재 (2209) |
 | 로그 진행 | **20:29:34 이후 189초간 0줄** (age 95s → 189s) | 204초 동안 app.log **198줄**, 마지막 기록 age **1~2s** |
 | `BLOCKED` 로그 | 2건 | **0건** |
-| 스레드 대기 지점 | 3개 모두 `futex_wait` | main `futex_wait`(join, 정상), worker 2개 `do_select`(sleep 후 깨어나 작업) |
+| 스레드 대기 지점 | 3개 모두 `futex_wait` | main `futex_wait`(워커 대기로 추정), worker 2개 `do_select`(sleep류 타이머 대기로 추정, utime 증가 확인) |
 | 스레드 utime 변화 (두 시점) | 1495: 0→0, 1496: 0→0 (**정지**) | 2210: 10→20, 2211: 95→188 (**진행**) |
 | 종료 | 수동 SIGTERM 전까지 Hang | 수동 SIGTERM 전까지 정상 동작 |
 
@@ -173,7 +173,7 @@ After의 두 시점 측정 ([probe.txt](../evidence/deadlock/after/probe.txt) �
           mtime age: 2s                                    |            mtime age: 1s
 ```
 
-**검증 결과**: `false`로 바꾸자 데드락이 재현되지 않았다. 로그가 계속 진행됐고(`Scheduler All tasks completed`, `Memory Cache Flushed` 3회 등), 워커 스레드가 CPU tick을 계속 소비하며 작업했다. 같은 상태 `S`여도 Before는 **락 대기(`futex_wait`)**, After는 **타이머 대기(`do_select`, `time.sleep`)**였다. `wchan`으로 "막힌 대기"와 "쉬는 대기"를 구분할 수 있었다.
+**검증 결과**: `false`로 바꾸자 데드락이 재현되지 않았다. 로그가 계속 진행됐고(`Scheduler All tasks completed`, `Memory Cache Flushed` 3회 등), 워커 스레드가 CPU tick을 계속 소비하며 작업했다. 같은 상태 `S`여도 Before는 **락 대기(`futex_wait`)**, After는 **`do_select`(타이머·I/O 대기 — Python `time.sleep`이 이 경로를 쓰는 것으로 추정)**였다. `wchan`으로 "막힌 대기"와 "쉬는 대기"를 구분할 수 있었다.
 
 ### 한계와 근본 해결 제안
 - 멀티스레드를 끄는 것은 **동시성을 포기하는 임시 조치**다. 처리량이 줄어든다.
