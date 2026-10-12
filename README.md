@@ -2,15 +2,17 @@
 
 `agent-leak-app`을 리눅스 컨테이너에서 실행하며 발생한 **OOM / CPU Spike / Deadlock** 장애 3건을 관제 데이터와 로그로 분석하고, GitHub Issue 형식의 리포트로 남겼다. 보너스로 스케줄링 알고리즘 추론 리포트 1건을 추가했다.
 
+리포트 4건은 이 저장소의 [GitHub Issues](https://github.com/zxcv718/b4-2/issues)(#1~#4)에 등록돼 있고, 같은 원문이 `issues/` 폴더에 있다.
+
 ## 리포트
 
-| # | 리포트 | 장애 유형 | 조정 변수 | Before → After |
+| Issue | 원문 | 장애 유형 | 조정 변수 | Before → After |
 |---|---|---|---|---|
-| 1 | [issues/01-oom.md](issues/01-oom.md) | OOM Crash (MemoryGuard) | `MEMORY_LIMIT` 256 → 512 | 33s 후 SIGKILL(137) → 153s+ 생존, 한도 도달 시 회수 |
-| 2 | [issues/02-cpu-spike.md](issues/02-cpu-spike.md) | CPU Latency (Watchdog) | `CPU_MAX_OCCUPY` 80 → 50 | 30s 후 SIGTERM(143) → 155s+ 생존, 50%에서 cooldown |
-| 3 | [issues/03-deadlock.md](issues/03-deadlock.md) | Deadlock (Hang) | `MULTI_THREAD_ENABLE` true → false | 로그 189s 정지·전 스레드 `futex_wait` → 정상 진행 |
-| 보너스 | [issues/04-bonus-scheduling.md](issues/04-bonus-scheduling.md) | 스케줄링 추론 | - | Round-Robin, 퀀텀 ≈ 2단계(약 110ms), 4회 재현 |
-| 템플릿 | [issues/TEMPLATE.md](issues/TEMPLATE.md) | 이슈 리포트 마크다운 템플릿 | | |
+| [#1](https://github.com/zxcv718/b4-2/issues/1) | [issues/01-oom.md](issues/01-oom.md) | OOM Crash (MemoryGuard) | `MEMORY_LIMIT` 256 → 512 | 33s 후 SIGKILL(137) → 153s+ 생존, 한도 도달 시 회수 |
+| [#2](https://github.com/zxcv718/b4-2/issues/2) | [issues/02-cpu-spike.md](issues/02-cpu-spike.md) | CPU Latency (Watchdog) | `CPU_MAX_OCCUPY` 80 → 50 | 30s 후 SIGTERM(143) → 155s+ 생존, 50%에서 cooldown |
+| [#3](https://github.com/zxcv718/b4-2/issues/3) | [issues/03-deadlock.md](issues/03-deadlock.md) | Deadlock (Hang) | `MULTI_THREAD_ENABLE` true → false | 로그 189s 정지·전 스레드 `futex_wait` → 정상 진행 |
+| [#4](https://github.com/zxcv718/b4-2/issues/4) (보너스) | [issues/04-bonus-scheduling.md](issues/04-bonus-scheduling.md) | 스케줄링 추론 | - | Round-Robin, 퀀텀 ≈ 2단계(약 110ms), 4회 재현 |
+| - (템플릿) | [issues/TEMPLATE.md](issues/TEMPLATE.md) | 이슈 리포트 마크다운 템플릿 | | |
 
 
 ## 평가항목 1 체크리스트 매핑
