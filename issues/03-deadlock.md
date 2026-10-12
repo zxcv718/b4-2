@@ -20,7 +20,7 @@
 
 진단은 아래 순서로 했다. 각 단계의 결과가 다음 단계에서 무엇을 확인할지를 정했다 ([`scripts/probe_hang.sh`](../scripts/probe_hang.sh)). 증거를 모은 뒤 스크립트에 "대상 없음" 처리를 넣고 1단계 grep 패턴을 좁혔다. 그래서 `probe.txt` 1단계에는 함께 띄운 관제 스크립트 줄이 찍혀 있고, `probe2.txt`의 `### 6)` 종료 기록은 수동 명령으로 덧붙인 것이다.
 
-### 2-1. ① 살아있는가: `ps -ef | grep` ([probe.txt](../evidence/deadlock/before/probe.txt), 로그가 멈춘 지 95초 뒤)
+### 2-1. ① 살아있는가: `ps -ef | grep` ([probe.txt](../evidence/deadlock/before/probe.txt), 로그가 멈춘 지 약 91초 뒤 수집 시작)
 
 ```
 ### 0) 시각: 2026-10-06 20:31:05  대상 PID: 1475
@@ -160,7 +160,7 @@ CASE=deadlock TAG=after MULTI_THREAD_ENABLE=false MEMORY_LIMIT=512 CPU_MAX_OCCUP
 |---|---|---|
 | 선택된 시나리오 | 동시 트랜잭션 처리 (`POTENTIAL DEADLOCK` 경고) | `Scenario Selected: [Healthy System Monitoring]` |
 | PID 존재 | 존재 (1475) | 존재 (2209) |
-| 로그 진행 | **20:29:34 이후 189초간 0줄** (age 95s → 189s) | 204초 동안 app.log **198줄**, 마지막 기록 age **1~2s** |
+| 로그 진행 | **20:29:34 이후 189초간 0줄** (age 95s → 189s) | 204초 동안 app.log **198줄**(빈 줄 제외, 그중 타임스탬프 로그 169줄), 마지막 기록 age **1~2s** |
 | `BLOCKED` 로그 | 2건 | **0건** |
 | 스레드 대기 지점 | 3개 모두 `futex_wait` | main `futex_wait`(워커 대기로 추정), worker 2개 `do_select`(sleep류 타이머 대기로 추정, utime 증가 확인) |
 | 스레드 utime 변화 (두 시점) | 1495: 0→0, 1496: 0→0 (**정지**) | 2210: 10→20, 2211: 95→188 (**진행**) |

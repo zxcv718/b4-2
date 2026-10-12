@@ -27,4 +27,4 @@ PyInstaller onefile: 부모(부트로더, RSS ~1.7MB) → 자식(실제 Python, 
 ## 로그 캡처 주의
 - stdout을 파일로 리다이렉트하면 Python 블록 버퍼링 때문에 SIGKILL 시 마지막 출력이 사라진다 → `PYTHONUNBUFFERED=1`.
 - 미션 예시의 `SELF-TERMINATED` / `WATCHDOG ... SIGTERM` 배너는 이 빌드에서 출력되지 않는다. 핵심 로그는 `[CRITICAL] [MemoryGuard] ...`, `[CRITICAL] [CpuWorker] CPU Threshold Violated!`와 종료 코드(137/143).
-- 데드락 상태 프로세스도 SIGTERM에 종료된다(EXIT 143) — 계획의 Review Focus 5 가설(SIGTERM 무응답)은 반증.
+- 데드락 상태 프로세스도 SIGTERM에 종료된다(EXIT 143) — "데드락 상태에서는 SIGTERM이 처리되지 않을 것"이라는 사전 가설은 반증.

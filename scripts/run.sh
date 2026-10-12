@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# usage: CASE=oom TAG=before MEMORY_LIMIT=128 scripts/run.sh
+# usage: CASE=oom TAG=before MEMORY_LIMIT=128 scripts/run.sh   (Intel: BIN=./agent-leak-app-x86)
 set -u
 : "${CASE:?CASE 필요}" "${TAG:?TAG 필요}"
 source "$(dirname "$0")/agent.env"
@@ -9,7 +9,7 @@ env | grep -E '^(AGENT_[A-Z_]*|MEMORY_LIMIT|CPU_MAX_OCCUPY|MULTI_THREAD_ENABLE)=
 scripts/monitor.sh agent-leak-app "${MON_INTERVAL:-5}" "$out/monitor.log" "$out/app.log" > /dev/null & mon=$!
 trap 'kill $mon 2>/dev/null' EXIT
 start=$(date +%s); echo "START $(date '+%F %T')" | tee "$out/run.txt"
-./agent-leak-app-arm64 2>&1 | tee "$out/app.log"
+"${BIN:-./agent-leak-app-arm64}" 2>&1 | tee "$out/app.log"
 rc=${PIPESTATUS[0]}; end=$(date +%s)
 echo "END $(date '+%F %T') EXIT:$rc SURVIVED:$((end-start))s" | tee -a "$out/run.txt"
 sleep $(( ${MON_INTERVAL:-5} + 2 ))   # 종료 후 NOT_RUNNING 한 줄을 남긴다 (관제 1주기 = 간격 + top 1초)

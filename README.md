@@ -40,7 +40,7 @@
 
 ## 재현 방법
 
-바이너리(`agent-leak-app-arm64`, Intel은 x86 판)는 미션 첨부 zip에서 받아 저장소 루트에 둔다(`.gitignore` 처리됨). 스크립트는 저장소 루트에서 실행한다.
+바이너리(`agent-leak-app-arm64`, Intel은 x86 판)는 미션 첨부 zip에서 받아 저장소 루트에 둔다(`.gitignore` 처리됨). 스크립트는 저장소 루트에서 실행한다. Intel 판은 `BIN=./agent-leak-app-x86`을 함께 지정한다.
 
 ```bash
 docker build -t b4-2 .
